@@ -30,7 +30,6 @@ class Db:
 
     def last_temp(self) -> Temp:
         t = self.last_temp_coll.find_one()
-        print(t)
         return Temp(**t) #type: ignore
 
     def last_days(self, days: int) -> List[Temp]:
