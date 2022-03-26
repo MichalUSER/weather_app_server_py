@@ -5,7 +5,7 @@ from typing import List
 import os
 import datetime
 
-from temp import Temp, Temp
+from temp import Temp
 
 class Db:
     def __init__(self):
