@@ -1,0 +1,27 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+generator db {
+  provider  = "prisma-client-py"
+  previewFeatures = ["mongoDb"]
+}
+
+model Temp {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  y             Int
+  m             Int
+  d             Int
+  h             Int
+  averageTemp   String
+}
+
+model LastTemp {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  y             Int
+  m             Int
+  d             Int
+  h             Int
+  averageTemp   String
+}

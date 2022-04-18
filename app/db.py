@@ -1,25 +1,29 @@
 from fastapi.encoders import jsonable_encoder
-from pymongo import MongoClient
-from dotenv import load_dotenv
 from typing import List
 import os
 import datetime
+from dataclasses import dataclass
+from devtools import debug
 
-from temp import Temp
+from prisma import Prisma
+from prisma.models import Temp, LastTemp
+
+prisma = Prisma(auto_register=True)
 
 class Db:
-    def __init__(self):
-        load_dotenv()
-        client = MongoClient(os.environ.get("MONGODB_URI"))
-        self.db = client["weather-app"]
-        self.temps_coll = self.db[os.environ.get("MONGODB_NAME")]
-        self.last_temp_coll = self.db["last_temp"]
+    async def connect(self):
+        await prisma.connect()
 
-    def add_temp(self, temp: Temp):
-        self.temps_coll.insert_one(jsonable_encoder(temp))
+    async def disconnect(self):
+        await prisma.disconnect()
 
-    def add_last_temp(self, temp: Temp):
-        self.last_temp_coll.replace_one({}, jsonable_encoder(temp))
+    async def add_temp(self, temp):
+        debug(temp)
+        await Temp.prisma().create(data=temp)
+
+    async def add_last_temp(self, temp):
+        last_temp = await LastTemp.prisma().find_first(where={})
+        await LastTemp.prisma().update(where={'id': last_temp.id}, data=temp)
 
     def get_temps(self, m: int, d: int) -> List[Temp]:
         search: List[Temp] = []
