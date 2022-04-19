@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prisma.models import LastTemp
@@ -36,7 +37,7 @@ async def add_last_temp(temp: Temp):
     await db.add_last_temp(temp)
     return {"msg": "ok"}
 
-@app.get("/temps/{m}/{d}")
+@app.get("/temps/{m}/{d}", response_model=List[Temp])
 async def search_temps(m: int, d: int):
     return await db.get_temps(m, d)
 
@@ -44,7 +45,7 @@ async def search_temps(m: int, d: int):
 async def last_temp():
     return await db.last_temp()
 
-@app.get("/last_days/{d}")
+@app.get("/last_days/{d}", response_model=List[Temp])
 async def last_days(d: int):
     if d == 0 or d > 29:
         return {"msg": "day cannot be 0 or larger than 29"}
