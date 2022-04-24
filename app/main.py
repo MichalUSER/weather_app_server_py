@@ -37,6 +37,11 @@ async def add_last_temp(temp: Temp):
     await db.add_last_temp(temp)
     return {"msg": "ok"}
 
+@app.delete("/delete_temps/{m}/{d}")
+async def delete_temps(m: int, d: int):
+    await db.delete_temps(m, d)
+    return {"msg": "ok"}
+
 @app.get("/temps/{m}/{d}", response_model=List[Temp])
 async def search_temps(m: int, d: int):
     return await db.get_temps(m, d)

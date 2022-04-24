@@ -25,6 +25,9 @@ class Db:
             return
         await LastTemp.prisma().update(where={'id': last_temp.id}, data=jsonable_encoder(temp)) #type: ignore
 
+    async def delete_temps(self, m: int, d: int):
+        await Temp.prisma().delete_many(where={'m': m, 'd': d})
+
     async def get_temps(self, m: int, d: int) -> List[Temp]:
         return await Temp.prisma().find_many(where={'m': m, 'd': d})
 
